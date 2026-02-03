@@ -226,6 +226,9 @@ class PeerWeb {
         this.timeouts = []; // Track setTimeout IDs for cleanup
         this.processingInProgress = false; // Flag to prevent race conditions
         this.processingTimeout = null; // Track processing timeout
+        this.lastSessionKey = 'peerweb:lastSession';
+        this.installPromptEvent = null;
+        this.wakeLock = null;
         this.trackers = [
             'wss://tracker.btorrent.xyz',
             'wss://tracker.openwebtorrent.com',
@@ -248,6 +251,7 @@ class PeerWeb {
             this.setupCleanupHandlers();
             this.checkURL();
             this.updateDebugToggle();
+            this.updateSessionCard();
         } catch (error) {
             console.error('PeerWeb initialization failed:', error);
             this.showError('Failed to initialize PeerWeb: ' + error.message);
@@ -768,6 +772,7 @@ class PeerWeb {
         // Setup drag and drop and quick upload
         this.setupDragAndDrop();
         this.setupQuickUpload();
+        this.setupSessionControls();
     }
 
     setupDragAndDrop() {
@@ -876,6 +881,61 @@ class PeerWeb {
                 const os = target.dataset.os;
                 this.downloadDesktopClient(os);
             });
+        });
+    }
+
+    setupSessionControls() {
+        const restoreSession = document.getElementById('restore-session');
+        if (restoreSession) {
+            restoreSession.addEventListener('click', () => {
+                const session = this.getLastSession();
+                if (session?.hash) {
+                    this.loadSite(session.hash);
+                }
+            });
+        }
+
+        const clearSession = document.getElementById('clear-session');
+        if (clearSession) {
+            clearSession.addEventListener('click', () => {
+                this.clearLastSession();
+                this.toast.info('Session locale effacée.', 'Session');
+            });
+        }
+
+        const installApp = document.getElementById('install-app');
+        if (installApp) {
+            installApp.addEventListener('click', async () => {
+                if (!this.installPromptEvent) {
+                    this.toast.info("L'installation n'est pas disponible sur ce navigateur.", 'Installation');
+                    return;
+                }
+                this.installPromptEvent.prompt();
+                await this.installPromptEvent.userChoice;
+                this.installPromptEvent = null;
+                installApp.classList.add('hidden');
+            });
+        }
+
+        const enableContinuity = document.getElementById('enable-continuity');
+        if (enableContinuity) {
+            enableContinuity.addEventListener('click', async () => {
+                await this.requestWakeLock();
+            });
+        }
+
+        window.addEventListener('beforeinstallprompt', (event) => {
+            event.preventDefault();
+            this.installPromptEvent = event;
+            if (installApp) {
+                installApp.classList.remove('hidden');
+            }
+        });
+
+        document.addEventListener('visibilitychange', async () => {
+            if (this.wakeLock && document.visibilityState === 'visible') {
+                await this.requestWakeLock(true);
+            }
         });
     }
 
@@ -1372,9 +1432,105 @@ class PeerWeb {
             resultEl.classList.remove('hidden');
         }
 
+        this.setLastSession(sanitizedHash, url);
+
         // Update seeding stats if available
         if (torrent) {
             this.updateSeedingStats(torrent);
+        }
+    }
+
+    getLastSession() {
+        try {
+            const raw = localStorage.getItem(this.lastSessionKey);
+            if (!raw) {
+                return null;
+            }
+            return JSON.parse(raw);
+        } catch (error) {
+            this.log(`Failed to read last session: ${error.message}`);
+            return null;
+        }
+    }
+
+    setLastSession(hash, url) {
+        try {
+            const payload = {
+                hash,
+                url,
+                updatedAt: new Date().toISOString()
+            };
+            localStorage.setItem(this.lastSessionKey, JSON.stringify(payload));
+            this.updateSessionCard();
+        } catch (error) {
+            this.log(`Failed to store last session: ${error.message}`);
+        }
+    }
+
+    clearLastSession() {
+        try {
+            localStorage.removeItem(this.lastSessionKey);
+            this.updateSessionCard();
+        } catch (error) {
+            this.log(`Failed to clear last session: ${error.message}`);
+        }
+    }
+
+    updateSessionCard() {
+        const sessionCard = document.getElementById('session-restore');
+        const sessionHash = document.getElementById('session-hash');
+        const sessionUpdated = document.getElementById('session-updated');
+
+        if (!sessionCard || !sessionHash || !sessionUpdated) {
+            return;
+        }
+
+        const session = this.getLastSession();
+        if (!session || !session.hash) {
+            sessionCard.classList.add('hidden');
+            return;
+        }
+
+        sessionHash.textContent = session.hash;
+        sessionUpdated.textContent = session.updatedAt
+            ? `Dernière mise à jour : ${new Date(session.updatedAt).toLocaleString()}`
+            : '';
+        sessionCard.classList.remove('hidden');
+    }
+
+    async requestWakeLock(silent = false) {
+        const status = document.getElementById('continuity-status');
+        if (!('wakeLock' in navigator)) {
+            if (status) {
+                status.textContent = 'Mode maintien indisponible';
+            }
+            if (!silent) {
+                this.toast.warning('Le mode maintien n’est pas supporté sur ce navigateur.', 'Continuité');
+            }
+            return;
+        }
+
+        try {
+            this.wakeLock = await navigator.wakeLock.request('screen');
+            if (status) {
+                status.textContent = 'Mode maintien actif';
+            }
+            if (!silent) {
+                this.toast.success('Mode maintien activé. Gardez l’app ouverte en arrière-plan.', 'Continuité');
+            }
+            this.wakeLock.addEventListener('release', () => {
+                if (status) {
+                    status.textContent = 'Mode maintien inactif';
+                }
+            });
+        } catch (error) {
+            if (status) {
+                status.textContent = 'Activation impossible';
+            }
+            if (!silent) {
+                this.toast.error('Impossible d’activer le mode maintien.', 'Continuité');
+            }
+            this.log(`Wake lock error: ${error.message}`);
         }
     }
 
@@ -1549,6 +1705,7 @@ class PeerWeb {
         }
 
         this.currentHash = sanitizedHash;
+        this.setLastSession(sanitizedHash, `${window.location.origin}${window.location.pathname}?orc=${sanitizedHash}`);
 
         // Check cache first
         const cachedSite = await this.cache.get(sanitizedHash);

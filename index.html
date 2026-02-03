@@ -59,43 +59,66 @@
                 box-sizing: border-box;
             }
 
+            :root {
+                color-scheme: light;
+                --bg: #f5f5f7;
+                --text: #1d1d1f;
+                --muted: #6e6e73;
+                --card: rgba(255, 255, 255, 0.85);
+                --card-border: #e5e5ea;
+                --accent: #0071e3;
+                --accent-strong: #0060c7;
+                --accent-soft: rgba(0, 113, 227, 0.12);
+                --success: #34c759;
+                --warning: #ff9f0a;
+                --danger: #ff3b30;
+                --shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+            }
+
             body {
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 line-height: 1.6;
-                color: #333;
-                background: linear-gradient(324deg, #66d4ea 0%, #504ba2 100%);
+                color: var(--text);
+                background: radial-gradient(circle at top, #ffffff 0%, #f5f5f7 55%, #eef1f6 100%);
                 min-height: 100vh;
             }
 
             .hero {
                 text-align: center;
-                padding: 2rem 0;
-                color: white;
-                background: rgba(0, 0, 0, 0.2);
+                padding: 2.5rem 0 2rem;
+                color: var(--text);
+                background: rgba(255, 255, 255, 0.75);
+                border-bottom: 1px solid var(--card-border);
+                backdrop-filter: blur(18px);
             }
 
             .hero h1 {
                 font-size: 3rem;
-                margin-bottom: 0.5rem;
+                margin-bottom: 0.35rem;
                 margin-left: -35px;
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+                font-weight: 600;
+                letter-spacing: -0.02em;
+                text-shadow: none;
             }
 
             .hero h2 {
-                font-size: 1.5rem;
-                font-weight: 300;
-                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+                font-size: 1.25rem;
+                font-weight: 400;
+                color: var(--muted);
+                text-shadow: none;
             }
 
             .container {
                 max-width: 1200px;
                 margin: 0 auto;
-                padding: 2rem;
-                background: white;
-                border-radius: 20px;
+                padding: 2.5rem;
+                background: var(--card);
+                border-radius: 28px;
                 margin-top: 2rem;
                 margin-bottom: 2rem;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                box-shadow: var(--shadow);
+                border: 1px solid var(--card-border);
+                backdrop-filter: blur(24px);
             }
 
             section {
@@ -109,7 +132,8 @@
             h3 {
                 font-size: 1.8rem;
                 margin-bottom: 1rem;
-                color: #4a5568;
+                color: var(--text);
+                letter-spacing: -0.01em;
             }
 
             .steps,
@@ -121,10 +145,10 @@
 
             .step,
             .req {
-                padding: 1rem;
-                background: #f7fafc;
-                border-radius: 10px;
-                border-left: 4px solid #667eea;
+                padding: 1.25rem;
+                background: #fafafa;
+                border-radius: 14px;
+                border: 1px solid var(--card-border);
             }
 
             .code-block {
@@ -147,10 +171,10 @@
 
             .feature,
             .benefit {
-                padding: 1rem;
-                background: #edf2f7;
-                border-radius: 8px;
-                border: 1px solid #e2e8f0;
+                padding: 1.25rem;
+                background: #fafafa;
+                border-radius: 16px;
+                border: 1px solid var(--card-border);
             }
 
             .button-group {
@@ -165,54 +189,61 @@
             }
 
             .btn {
-                padding: 0.75rem 1.5rem;
+                padding: 0.65rem 1.4rem;
                 border: none;
-                border-radius: 8px;
+                border-radius: 999px;
                 cursor: pointer;
-                font-size: 1rem;
-                font-weight: 500;
-                transition: all 0.3s ease;
+                font-size: 0.98rem;
+                font-weight: 600;
+                transition: all 0.25s ease;
                 text-decoration: none;
                 display: inline-flex;
                 align-items: center;
                 gap: 0.5rem;
+                justify-content: center;
+                letter-spacing: -0.01em;
             }
 
             .btn-primary {
-                background: #667eea;
+                background: var(--accent);
                 color: white;
             }
 
             .btn-primary:hover {
-                background: #5a67d8;
-                transform: translateY(-2px);
+                background: var(--accent-strong);
+                transform: translateY(-1px);
             }
 
             .btn-debug {
-                background: #ed8936;
+                background: var(--warning);
                 color: white;
             }
 
             .btn-clear {
-                background: #e53e3e;
+                background: var(--danger);
                 color: white;
             }
 
             .btn-create {
-                background: #38a169;
+                background: var(--success);
                 color: white;
             }
 
             .btn-back {
-                background: #718096;
+                background: #8e8e93;
                 color: white;
             }
 
             .btn-secondary {
-                display: none;
-                background: #edf2f7;
-                color: #4a5568;
-                border: 1px solid #e2e8f0;
+                background: #f5f5f7;
+                color: var(--text);
+                border: 1px solid var(--card-border);
+            }
+
+            .btn-ghost {
+                background: transparent;
+                color: var(--muted);
+                border: 1px solid var(--card-border);
             }
 
             .hash-input-group {
@@ -224,16 +255,18 @@
 
             .hash-input {
                 flex: 1;
-                padding: 0.75rem;
-                border: 2px solid #e2e8f0;
-                border-radius: 8px;
+                padding: 0.85rem 1rem;
+                border: 1px solid var(--card-border);
+                border-radius: 14px;
                 font-size: 1rem;
                 min-width: 300px;
+                background: #fff;
             }
 
             .hash-input:focus {
                 outline: none;
-                border-color: #667eea;
+                border-color: var(--accent);
+                box-shadow: 0 0 0 4px var(--accent-soft);
             }
 
             .debug-panel {
@@ -351,12 +384,13 @@
 
             .viewer-header {
                 height: 60px;
-                background: #f7fafc;
-                border-bottom: 1px solid #e2e8f0;
+                background: rgba(249, 250, 251, 0.9);
+                border-bottom: 1px solid var(--card-border);
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 0 1rem;
+                padding: 0 1.25rem;
+                backdrop-filter: blur(12px);
             }
 
             .viewer-info {
@@ -386,12 +420,13 @@
             }
 
             .modal-content {
-                background: white;
-                border-radius: 15px;
+                background: #fff;
+                border-radius: 20px;
                 max-width: 600px;
                 width: 90%;
                 max-height: 80vh;
                 overflow-y: auto;
+                border: 1px solid var(--card-border);
             }
 
             .modal-header {
@@ -447,8 +482,8 @@
             footer {
                 text-align: center;
                 padding: 2rem;
-                color: white;
-                background: rgba(0, 0, 0, 0.2);
+                color: var(--muted);
+                background: transparent;
             }
 
             .tech-stack {
@@ -471,31 +506,31 @@
 
             .toast {
                 background: white;
-                border-radius: 12px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                border-radius: 16px;
+                box-shadow: 0 12px 32px rgba(15, 23, 42, 0.2);
                 padding: 1rem 1.5rem;
                 display: flex;
                 align-items: flex-start;
                 gap: 1rem;
                 animation: slideIn 0.3s ease-out;
-                border-left: 4px solid #667eea;
+                border-left: 4px solid var(--accent);
                 min-width: 300px;
             }
 
             .toast.toast-success {
-                border-left-color: #38a169;
+                border-left-color: var(--success);
             }
 
             .toast.toast-error {
-                border-left-color: #e53e3e;
+                border-left-color: var(--danger);
             }
 
             .toast.toast-warning {
-                border-left-color: #ed8936;
+                border-left-color: var(--warning);
             }
 
             .toast.toast-info {
-                border-left-color: #3182ce;
+                border-left-color: var(--accent);
             }
 
             .toast-icon {
@@ -614,8 +649,9 @@
                 margin-top: 2rem;
                 padding: 1.5rem;
                 background: rgba(255, 255, 255, 0.95);
-                border-radius: 15px;
-                color: #333;
+                border-radius: 18px;
+                color: var(--text);
+                border: 1px solid var(--card-border);
             }
 
             .file-list-container h4 {
@@ -796,32 +832,33 @@
             /* Quick Upload Section */
             .quick-upload {
                 margin-bottom: 3rem;
-                padding: 2rem;
-                background: linear-gradient(135deg, #66eacf 0%, #704ba2 100%);
-                border-radius: 15px;
-                color: white;
+                padding: 2.5rem;
+                background: linear-gradient(140deg, #eef4ff 0%, #f5f7ff 100%);
+                border-radius: 22px;
+                color: var(--text);
+                border: 1px solid #e1e8f6;
             }
 
             .quick-upload h3 {
-                color: white;
+                color: var(--text);
                 text-align: center;
                 margin-bottom: 2rem;
             }
 
             .drop-zone {
-                border: 3px dashed rgba(255, 255, 255, 0.5);
-                border-radius: 15px;
+                border: 2px dashed #c7d2fe;
+                border-radius: 18px;
                 padding: 3rem;
                 text-align: center;
                 transition: all 0.3s ease;
-                background: rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 0.6);
                 cursor: pointer;
             }
 
             .drop-zone.drag-over {
-                border-color: #fff;
-                background: rgba(255, 255, 255, 0.2);
-                transform: scale(1.02);
+                border-color: var(--accent);
+                background: rgba(255, 255, 255, 0.9);
+                transform: scale(1.01);
             }
 
             .drop-content {
@@ -837,7 +874,7 @@
             .drop-content h4 {
                 font-size: 1.5rem;
                 margin-bottom: 0.5rem;
-                color: white;
+                color: var(--text);
             }
 
             .drop-content p {
@@ -860,8 +897,9 @@
                 margin-top: 2rem;
                 padding: 2rem;
                 background: rgba(255, 255, 255, 0.95);
-                border-radius: 15px;
-                color: #333;
+                border-radius: 20px;
+                color: var(--text);
+                border: 1px solid var(--card-border);
             }
 
             .result-success h4 {
@@ -902,16 +940,16 @@
             }
 
             .notice-box {
-                background: #fff3cd;
-                border: 1px solid #ffeaa7;
-                border-radius: 10px;
+                background: #f5f5f7;
+                border: 1px solid var(--card-border);
+                border-radius: 16px;
                 padding: 1.5rem;
-                color: #856404;
+                color: var(--text);
             }
 
             .notice-box h5 {
                 margin-bottom: 1rem;
-                color: #856404;
+                color: var(--text);
                 font-size: 1.1rem;
             }
 
@@ -933,17 +971,17 @@
                 align-items: center;
                 gap: 0.5rem;
                 padding: 0.5rem 1rem;
-                background: #667eea;
+                background: var(--accent);
                 color: white;
                 text-decoration: none;
-                border-radius: 8px;
+                border-radius: 999px;
                 font-size: 0.875rem;
                 transition: all 0.3s ease;
             }
 
             .desktop-link:hover {
-                background: #5a67d8;
-                transform: translateY(-2px);
+                background: var(--accent-strong);
+                transform: translateY(-1px);
             }
 
             /* Animations */
@@ -982,7 +1020,7 @@
             .progress-bar {
                 width: 100%;
                 height: 8px;
-                background: rgba(255, 255, 255, 0.3);
+                background: rgba(0, 0, 0, 0.08);
                 border-radius: 4px;
                 overflow: hidden;
                 margin-bottom: 0.5rem;
@@ -992,7 +1030,7 @@
                 content: '';
                 display: block;
                 height: 100%;
-                background: #38a169;
+                background: var(--accent);
                 width: 0%;
                 transition: width 0.3s ease;
                 border-radius: 4px;
@@ -1043,13 +1081,13 @@
 
             /* Enhanced button styles */
             .btn {
-                padding: 0.75rem 1.5rem;
+                padding: 0.65rem 1.4rem;
                 border: none;
-                border-radius: 8px;
+                border-radius: 999px;
                 cursor: pointer;
-                font-size: 1rem;
-                font-weight: 500;
-                transition: all 0.3s ease;
+                font-size: 0.98rem;
+                font-weight: 600;
+                transition: all 0.25s ease;
                 text-decoration: none;
                 display: inline-flex;
                 align-items: center;
@@ -1059,8 +1097,8 @@
             }
 
             .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                transform: translateY(-1px);
+                box-shadow: 0 6px 14px rgba(15, 23, 42, 0.15);
             }
 
             .btn:active {
@@ -1069,7 +1107,62 @@
 
             .maintitle {
                 text-decoration: none;
-                color: #ddd;
+                color: var(--text);
+            }
+
+            .session-card {
+                margin-top: 1.25rem;
+                padding: 1.5rem;
+                border-radius: 18px;
+                border: 1px solid var(--card-border);
+                background: #ffffff;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 1.5rem;
+                flex-wrap: wrap;
+            }
+
+            .session-meta {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+                color: var(--muted);
+            }
+
+            .session-meta code {
+                font-size: 0.9rem;
+                color: var(--text);
+                background: #f5f5f7;
+                padding: 0.25rem 0.5rem;
+                border-radius: 6px;
+            }
+
+            .session-actions {
+                display: flex;
+                gap: 0.75rem;
+                flex-wrap: wrap;
+            }
+
+            .continuity-card {
+                margin-top: 1.5rem;
+                padding: 1.5rem;
+                border-radius: 16px;
+                border: 1px solid var(--card-border);
+                background: #ffffff;
+            }
+
+            .continuity-actions {
+                display: flex;
+                gap: 0.75rem;
+                align-items: center;
+                flex-wrap: wrap;
+                margin-top: 0.75rem;
+            }
+
+            .continuity-status {
+                font-size: 0.9rem;
+                color: var(--muted);
             }
 
             /* Success animation */
@@ -1180,18 +1273,37 @@
                                 <div class="notice-box">
                                     <h5>🌍 Hosting Notice</h5>
                                     <p>
-                                        <strong>Keep this PeerWeb tab open to host your site!</strong> As long as this
-                                        tab remains open, your website will be available to others through the
-                                        peer-to-peer network.
+                                        <strong
+                                            >Gardez cet onglet PeerWeb ouvert pour héberger votre site.</strong
+                                        >
+                                        Tant que l'application reste active, votre site reste disponible via le
+                                        réseau peer-to-peer.
                                     </p>
                                     <p>
-                                        💡 <strong>Alternative:</strong> Download our desktop client for permanent
-                                        hosting without keeping browser tabs open:
+                                        💡 <strong>Alternative :</strong> téléchargez notre client desktop pour un
+                                        hébergement permanent sans garder l'onglet ouvert :
                                     </p>
                                     <div class="desktop-clients">
                                         <a href="#" class="desktop-link" data-os="windows">🪟 Windows</a>
                                         <a href="#" class="desktop-link" data-os="mac">🍎 macOS</a>
                                         <a href="#" class="desktop-link" data-os="linux">🐧 Linux</a>
+                                    </div>
+                                </div>
+                                <div class="continuity-card">
+                                    <h5>🧠 Continuité &amp; mode Apple</h5>
+                                    <p>
+                                        Pour maintenir votre site même si vous quittez la page, installez l'app et
+                                        laissez-la ouverte en arrière-plan. Activez aussi le mode maintien pour éviter
+                                        la mise en veille.
+                                    </p>
+                                    <div class="continuity-actions">
+                                        <button id="install-app" class="btn btn-primary hidden">
+                                            ⬇️ Installer l'app
+                                        </button>
+                                        <button id="enable-continuity" class="btn btn-secondary">
+                                            🔋 Activer le mode maintien
+                                        </button>
+                                        <span id="continuity-status" class="continuity-status">Inactif</span>
                                     </div>
                                 </div>
                             </div>
@@ -1225,6 +1337,17 @@
                         <button id="load-site" class="btn btn-primary">Load Site</button>
                     </div>
                     <p>🎯 Just the hash! PeerWeb automatically adds the magnet link prefix and trackers.</p>
+                    <div id="session-restore" class="session-card hidden">
+                        <div class="session-meta">
+                            <strong>Dernier site sauvegardé</strong>
+                            <code id="session-hash"></code>
+                            <span id="session-updated"></span>
+                        </div>
+                        <div class="session-actions">
+                            <button id="restore-session" class="btn btn-primary">Reprendre</button>
+                            <button id="clear-session" class="btn btn-ghost">Effacer</button>
+                        </div>
+                    </div>
                 </section>
 
                 <section class="example">
